@@ -24,88 +24,143 @@ source("./functions/boot_glmm2.r")
 source("./functions/boot_glmmTMB.r")
 source("./functions/glmmTMB_stability.r")
 source("./functions/drop1_para_glmmtmb.r")
-load("./workspaces/dwell_time_react_IP.RData")
+#load("./workspaces/dwell_times.RData"")
 ```
 
-# Import data - reaction IP 
-Duration: the last 13200 ms 
+# Import data - whole video IP 
+Duration: 8.022 s
 
 ```{r}
-#IA report (from reaction IP - from frame 579 for Zserbo - session 1)
-reaction.ip.orig.data.Zserbo <- read_delim("data/IA_report_IP_from_reaction_frame579.txt", na=".", delim="\t") %>% 
-   filter(RECORDING_SESSION_LABEL=="Zserbo_1")
+#IA report (whole video IP)
+orig.data <- read_delim("data/ambiguous_clear_goal_IA_report2.txt", na=".", delim="\t") %>%
+   filter(!(RECORDING_SESSION_LABEL == "Alaska_3" & Trial_Index_ == 3),
+         !(RECORDING_SESSION_LABEL == "Alaska_2" & Trial_Index_ == 3),
+         !(RECORDING_SESSION_LABEL == "Alaska_2" & Trial_Index_ == 4), #last 2 repeated
+         !(RECORDING_SESSION_LABEL == "Sheila_1" & Trial_Index_ == 4),
+         !(RECORDING_SESSION_LABEL == "Sheila_2" & Trial_Index_ == 3),
+         !(RECORDING_SESSION_LABEL == "Timo_3" & Trial_Index_ == 3),  #from first until here excluded because edf empty
+         !(RECORDING_SESSION_LABEL == "Filou_3" & Trial_Index_ == 1),
+         !(RECORDING_SESSION_LABEL == "Filou_3" & Trial_Index_ == 2),
+         !(RECORDING_SESSION_LABEL == "Filou_3" & Trial_Index_ == 4), #session was repeated but these 3 trials not needed
+         !(RECORDING_SESSION_LABEL == "Sheila_1" & Trial_Index_ == 3), #left chinrest too soon, repeated
+         !(RECORDING_SESSION_LABEL == "Filou_1" & Trial_Index_ == 4), #left chinrest too soon, repeated
+         !(RECORDING_SESSION_LABEL == "Timo_2" & Trial_Index_ == 3),#looked off screen during manipulation, repeated
+         !(RECORDING_SESSION_LABEL == "Timo_2" & Trial_Index_ == 4), #repeated bc looked off screen in previous trial
+         ! grepl("Striezi", RECORDING_SESSION_LABEL), #only used the experiment as training, only one session 
+         !(RECORDING_SESSION_LABEL == "Juna_1" & Trial_Index_ == 3),
+         !(RECORDING_SESSION_LABEL == "Juna_1" & Trial_Index_ == 4), #eye not tracked during manipulation, lots of data loss
+         !(RECORDING_SESSION_LABEL == "Juna_2" & Trial_Index_ == 1),
+         !(RECORDING_SESSION_LABEL == "Juna_2" & Trial_Index_ == 2)) %>%  #skipped as this was a repetition session
+  arrange(RECORDING_SESSION_LABEL) %>%  #order rows alphabetically based on RECORDING_SESSION_LABEL
+  mutate(TRIAL_INDEX=as.numeric(TRIAL_INDEX)) %>% 
+ #replace old column session with new one
+   mutate(RECORDING_SESSION_LABEL=fct_recode(as.factor(RECORDING_SESSION_LABEL), "Georgia_1"="Georgia1","Georgia_2"="Georgia2", "Mathilda_1"="Mathild1", "Mathilda_2"="Mathild2", "Schnee_1"="Schnee1"))%>%
+  separate(RECORDING_SESSION_LABEL, c("subject", "session"), sep="_", remove = FALSE) %>% 
+  mutate(session=as.numeric(session)) %>% 
+ #adjust session and TRIAL_INDEX
+  mutate(
+    session = case_when(
+      RECORDING_SESSION_LABEL %in% c("Sheila_2", "Timo_3", "Alaska_3") ~ session - 1,
+      TRUE ~ session
+    ),
+    TRIAL_INDEX = case_when(
+      RECORDING_SESSION_LABEL %in% c("Sheila_2", "Timo_3", "Alaska_3") ~ TRIAL_INDEX + 2,
+      TRUE ~ TRIAL_INDEX
+    )
+  ) %>% 
+  mutate(
+    session = case_when(
+      RECORDING_SESSION_LABEL %in% c("Sheila_3","Juna_2", "Juna_3", "Maylo_3") ~ session - 1,
+      TRUE ~ session
+    )) %>% 
+  mutate(
+    session = case_when(
+      RECORDING_SESSION_LABEL == "Filou_3" ~ session - 2,
+      TRUE ~ session
+    ),
+    TRIAL_INDEX = case_when(
+      RECORDING_SESSION_LABEL == "Filou_3" ~ TRIAL_INDEX + 1,
+      TRUE ~ TRIAL_INDEX
+    )
+  ) 
+  
+str(orig.data)
+levels(as.factor(orig.data$IA_LABEL))
+table(orig.data$condition,orig.data$RECORDING_SESSION_LABEL)
+table(orig.data$condition,orig.data$TRIAL_INDEX)
+table(orig.data$condition,orig.data$session)
 
-#IA report (from reaction IP - from frame 580 for all other sessions)
-reaction.ip.orig.data <- read_delim("data/IA_report_IP_from_reaction.txt", na=".", delim="\t") %>% 
-  filter(RECORDING_SESSION_LABEL!="Nala_2",
-         RECORDING_SESSION_LABEL!="Sahibu_2",
-         RECORDING_SESSION_LABEL!="Melody_1", #until here repeated due to dog leaving chinrest too early (before second agent's reaction)
-         RECORDING_SESSION_LABEL!="Zserbo_1") %>% #excluded from here because frame 580 (the one defining the beginning of the reaction IP) was skipped in this video presentation, so we import this trial from frame 579 below
-  rbind(reaction.ip.orig.data.Zserbo) %>% 
-  arrange(RECORDING_SESSION_LABEL) #order rows alphabetically based on RECORDING_SESSION_LABEL
-  levels(as.factor(reaction.ip.orig.data$IA_LABEL))
-
-#demographic data
-demo.data <- read_csv("data/Non_verbal_communication_counterbalancing.csv")%>%
-  mutate(EDF3=fct_recode(as.factor(EDF3), "Georgia_3"="Georgia3", "Mathilda_3"="Mathild3"))%>%
-  separate(EDF3, c("subject", "num"), sep="_") %>% 
-  select(-num) %>% 
-  filter(!is.na(subject))
- 
-#full data file (IA report_IP_from reaction + demographics)
-reaction.ip.data <- reaction.ip.orig.data %>%
-  select(RECORDING_SESSION_LABEL, IP_LABEL, IA_LABEL,IA_ID, Trial_Index_, condition, trial_type, session_number, trial_number, video_file, DATA_FILE,  IA_AREA, IA_AVERAGE_FIX_PUPIL_SIZE,  IA_DWELL_TIME, "IA_DWELL_TIME_%", IA_FIXATION_COUNT, IA_MAX_FIX_PUPIL_SIZE, INTEREST_AREA_FIXATION_SEQUENCE, TRIAL_DWELL_TIME, TRIAL_FIXATION_COUNT, TRIAL_IA_COUNT, TRIAL_TOTAL_VISITED_IA_COUNT, IA_FIRST_FIXATION_TIME )%>%
-  mutate(RECORDING_SESSION_LABEL=fct_recode(RECORDING_SESSION_LABEL, Georgia_1="Georgia1",Georgia_2="Georgia2", Georgia_3="Georgia3",Georgia_4="Georgia4", Mathilda_1="Mathild1", Mathilda_2="Mathild2", Mathilda_3="Mathild3", Mathilda_4="Mathild4" ))%>%
-  separate(RECORDING_SESSION_LABEL, c("subject", "session.num"), sep = "_") %>% 
-  full_join(demo.data)%>%
-  filter(!is.na(session_number))
-
-#data checks
-summary(reaction.ip.data$TRIAL_DWELL_TIME)
-which(is.na(reaction.ip.data$TRIAL_DWELL_TIME)) 
-levels(as.factor(reaction.ip.data$subject))
 ```
 
-###Descriptive stats (reaction IP)
+
+```{r}
+#demographic data
+demo.data <- read_csv("data/ambiguous_clear_goal_counterbalancing.csv")%>%
+  mutate(EDF1=fct_recode(as.factor(EDF1), "Georgia_1"="Georgia1", "Mathilda_1"="Mathild1"))%>%
+  separate(EDF1, c("subject", "num"), sep="_", remove=F) %>% 
+  select(-num) %>% 
+  filter(!is.na(EDF1))
+ 
+#full data file (IA report_IP_from reaction + demographics)
+whole.vid.data <- orig.data %>%
+  select(RECORDING_SESSION_LABEL, IP_LABEL, IA_LABEL,IA_ID, TRIAL_INDEX, condition, session, video_file,  IA_AREA, IA_DWELL_TIME, IA_FIXATION_COUNT, INTEREST_AREA_FIXATION_SEQUENCE, TRIAL_DWELL_TIME, TRIAL_FIXATION_COUNT, TRIAL_IA_COUNT, TRIAL_TOTAL_VISITED_IA_COUNT, IA_FIRST_FIXATION_TIME )%>%
+  mutate(RECORDING_SESSION_LABEL=fct_recode(RECORDING_SESSION_LABEL, Georgia_1="Georgia1",Georgia_2="Georgia2", Mathilda_1="Mathild1", Mathilda_2="Mathild2", Schnee_1="Schnee1"))%>%
+  separate(RECORDING_SESSION_LABEL, c("subject", "session.num"), sep = "_") %>% 
+  select(-session.num) %>% 
+  full_join(demo.data)%>%
+  filter(!is.na(session))
+
+#data checks
+summary(whole.vid.data$TRIAL_DWELL_TIME)
+which(is.na(whole.vid.data$TRIAL_DWELL_TIME)) 
+levels(as.factor(whole.vid.data$subject)) #40
+levels(as.factor(whole.vid.data$IA_LABEL))
+str(whole.vid.data)
+
+whole.vid.data <- whole.vid.data %>% 
+  mutate(subject=as.factor(subject),
+         condition=as.factor(condition),
+         IA_LABEL=as.factor(IA_LABEL))
+
+```
+
+###Descriptive stats (whole video IP)
 
 ```{r}
 #descriptive statistics
 
-dwell.descr.react <-reaction.ip.data %>%
-  filter(IA_LABEL!="FIXATION_TRIGGER") %>% 
-  group_by(subject, trial_number, condition, trial_type, IA_LABEL, TRIAL_DWELL_TIME) %>% 
-  summarise(ia_dwell_time=IA_DWELL_TIME) %>% 
-   mutate(agent_type = ifelse(grepl("inviting|pointing", IA_LABEL), 
-                             "communicating", 
-                             "reacting")) %>% 
-  mutate(proportion.dwell.time.agents=ia_dwell_time/TRIAL_DWELL_TIME,
-         ia_dwell_time_log = as.numeric(ifelse(ia_dwell_time>0, log(ia_dwell_time), NA))) %>% 
+dwell.descr <-whole.vid.data %>%
+  mutate(IA_LABEL=fct_recode(IA_LABEL,"Dog Face"="dog_face_IA", "Human Face" =   "human_face_IA")) %>% 
+  group_by(subject, condition, TRIAL_INDEX, session, IA_LABEL) %>% 
+  summarise(mean_ia_dwell_time=mean(IA_DWELL_TIME),
+            sd_ia_dwell_time=sd(IA_DWELL_TIME),
+            proportion.dwell.time=IA_DWELL_TIME/TRIAL_DWELL_TIME,
+            log_ia_dwell_time = as.numeric(ifelse(IA_DWELL_TIME>0, log(IA_DWELL_TIME), NA)),
+            z_ia_dwell_time = (IA_DWELL_TIME - mean_ia_dwell_time)/sd_ia_dwell_time) %>% 
   ungroup()
 
+dwell.descr.short <- whole.vid.data %>%
+  mutate(proportion.dwell.time = IA_DWELL_TIME / TRIAL_DWELL_TIME) %>%
+  group_by(condition, IA_LABEL) %>%
+  summarise(
+    mean_ia_dwell_time = mean(IA_DWELL_TIME),
+    sd_ia_dwell_time = sd(IA_DWELL_TIME),
+    mean_proportion_dwell_time = mean(proportion.dwell.time)
+  ) %>%
+  ungroup()
 
-dwell.descr.react_ind <-reaction.ip.data %>%
-  filter(IA_LABEL!="FIXATION_TRIGGER") %>% 
-   mutate(agent_type = ifelse(grepl("inviting|pointing", IA_LABEL), 
-                             "communicating", 
-                             "reacting")) %>%
-  group_by(subject, agent_type) %>% 
-  summarise(ia_dwell_time_mean=mean(IA_DWELL_TIME),
-            ia_dwell_time_sd=sd(IA_DWELL_TIME))
-
-dwell.descr.react<-dwell.descr.react%>%
-  full_join(dwell.descr.react_ind)%>%
-  mutate(ia_dwell_time_z = (ia_dwell_time - ia_dwell_time_mean)/ia_dwell_time_sd)
+  
 
 
-ggplot(dwell.descr.react, aes(x =trial_type, y = ia_dwell_time_log))+
+ggplot(dwell.descr, aes(x =condition, y = mean_ia_dwell_time))+
   geom_boxplot()+
-  facet_wrap(~agent_type)
+  facet_wrap(~IA_LABEL)
 
-hist(dwell.descr.react$ia_dwell_time)
-hist(dwell.descr.react$ia_dwell_time_log)
+hist(dwell.descr$mean_ia_dwell_time)
+hist(dwell.descr$log_ia_dwell_time)
 
 ```
-
+#LL: 08/08/2025 continue from here
 
 ```{r}
 dwell.descr.aggr.react<-dwell.descr.react %>% 
