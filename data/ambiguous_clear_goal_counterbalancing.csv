@@ -1,0 +1,43 @@
+﻿Dog_ID,Date1,Date2,EDF1,EDF2,Cal_tar1,Cal_tar2,Name,Breed,sex,neutered,birth_date,age,condition_first,condition_second,age_clear_first,age_amb_first,sex_clear_first,sex_amb_first,comment
+01,15/09/2021,21/09/2021,Beny_1,Beny_2,w_minion64,w_minion32,Beny,Mix,m,yes,28/04/2019,28,ambiguous,clear,,,,,
+02,16/09/2021,30/09/2021,George_1,George_2,w_calibug32,w_minion64,George4,Collie,m,no,12/04/2019,29,clear,ambiguous,,,,,
+03,29/09/2021,06/10/2021,Georgia1,Georgia2,w_minion64,w_mandala32,Georgia,Labrador Retriever,f,yes,29/12/2017,45,clear,ambiguous,,,,,
+04,15/09/2021,21.09.2021/30.09.2021,Timo_1,Timo_2/Timo_3,w_calibug32,w_calibug32,Timo2,Mix,m,yes,01/02/2019,31,clear,ambiguous,,,,,"Session 2 (Timo_2): he did not leave the chin rest throuhgout the whole experiment, but in the 3rd trial he looked somewhere off the screen for a few seconds -> 30.09. Timo_3: 2 trials repeated of Session 2"
+05,16/09/2021,24/09/2021,Melody_1,Melody_2,w_minion64,w_hand64,Melody,Labrador Retriever,f,yes,14/08/2018,37,ambiguous,clear,,,,,
+06,15/09/2021,21/09/2021,Hetti_1,Hetti_2,w_fly32,w_fly32,Hetti,Mix,f,no,10/01/2019,32,clear,ambiguous,,,,,
+07,27/09/2021,04/10/2021,Lilly_1,Lilly_2,w_fly32,w_minion32,Lilly9,Mix,f,yes,07/09/2017,48,ambiguous,clear,,,,,
+08,24/09/2021,27.09.2021/01.10.2021,Maylo_1,Maylo_2/Maylo_3,w_minion64,w_minion64,Maylo,Mix,m,yes,13/11/2015,70,clear,ambiguous,,,,,Session 2: Maylo_2: window didn't shut down properly after test and file was not saved -> repeated Session 2 on 01.10.2021 (Maylo_3)
+09,17/09/2021,23/09/2021,Asta_1,Asta_2,w_calibug32,w_minion32,Asta2,Border Collie,f,no,05/10/2018,35,ambiguous,clear,,,,,
+10,14/09/2021,21/09/2021,Joker_1,Joker_2,w_minion64,w_minion64,Joker4,Australian Shepherd,m,no,18/08/2016,60,clear,ambiguous,,,,,
+11,23/09/2021,30/09/2021,Zserbo_1,Zserbo_2,w_minion32,w_smiley32,Zserbo,Small Münsterländer,m,yes,24/12/2019,20,ambiguous,clear,,,,,
+12,20/10/2021,28/10/2021,Lenny_1,Lenny_2,w_minion64,w_minion64,Lenny4,Canarian Warren Hound,m,yes,15/07/2014,87,clear,ambiguous,,,,,
+13,06/11/2021,27/11/2021,Amy_1,Amy_2,w_minion64,w_cuckoo64,Amy8,Border Collie,f,no,12/03/2010,139,ambiguous,clear,,,,,
+14,16/09/2021,23/09/2021,Ace_1,Ace_2,w_minion32,w_minion32,Ace3,Border Collie,m,yes,15/03/2019,30,ambiguous,clear,,,,,
+15,30/11/2021,18/02/2022,Sheila_1/Sheila_2,Sheila_3,w_cuckoo64,w_cuckoo64,Sheila,Mix,f,no,01/12/2012,107,ambiguous,clear,,,,,Session 1: Sheila_1: 2 trials (left chin rest); Sheila_2: 2 trials repeated
+16,13/10/2021,21/10/2021,Schnee1,Schnee_2,w_minion24,w_minion24,Schnee,Mix,m,yes,14/09/2014,84,clear,ambiguous,,,,,
+17,24/11/2021,01/12/2021,Knopfi_1,Knopfi_2,w_cuckoo32,w_cuckoo32,Knopfi,Australian Shepherd,m,yes,26/09/2016,61,ambiguous,clear,,,,,
+18,12/08/2022,08/09/2022,Milo_1,Milo_2,w_calibug64,w_fly64,Milo7,Australian Shepherd,m,no,20/04/2019,39,clear,ambiguous,,,,,
+02,,,,,,,Velvet3,Labrador Retriever,f,yes,19/04/2015,#NUM!,clear,ambiguous,,,,,
+01,15/09/2022,19/09/2022,Edgar_1,Edgar_2,w_fly64,w_fly64,Edgar3,Mix,m,yes,01/06/2019,39,ambiguous,clear,,,,,
+02,27/07/2023,02/08/2023,CB_1,CB_2,w_mouse64,w_mouse64,CB,Border Collie,f,yes,17/02/2017,77,clear,ambiguous,,,,,
+02,11/01/2023,16/01/2023,Mia_1,Mia_2,w_Minion64,w_Mignon64,Mia11,Mix,f,no,01/10/2018,51,clear,ambiguous,,,,,
+01,05/04/2023,12/04/2023,Ignaz_1,Ignaz_2,w_minion64,w_minion64,Ignaz,Fox Terrier,m,no,05/01/2021,27,ambiguous,clear,,,,,
+01,23.09.2022/27.09.2022,12/10/2022,Juna_1/Juna_2,Juna_3,w_calibug64/w_cuckoo64,w_cuckoo64,Juna,Flat Coated Retriever,f,no,06/02/2016,#VALUE!,ambiguous,clear,,,,,"Session 1: Juna_1: she barked after the 2nd video, Eye-tracker lost pupil shortly, had it then again, Juna_2: Session 1: trial 3 and 4"
+02,,,,,,,Lotte3,Portuguese Water Dog,f,yes,24/02/2019,#NUM!,clear,ambiguous,#NUM!,#VALUE!,7 m; 5 f,6 m; 6 f,
+01,13/10/2022,17/10/2022,Mailo_1,Mailo_2,w_minion64,w_minion64,Mailo,Mix,m,yes,09/07/2015,87,ambiguous,clear,,,,,
+02,11/11/2022,19.11.2022/26.11.2022,Alaska_1,Alaska_2/Alaksa_3,w_cuckoo64,w_cockoo64/w_mignon64,Alaska2,Sandros Leisha Dog,f,no,20/10/2019,36,clear,ambiguous,,,,,
+02,12/04/2023,07/06/2023,Sahibu_1,Sahibu_2,w_cuckoo64,w_cuckoo64,Sahibu,Mix,m,no,21/03/2014,108,clear,ambiguous,,,,,Sahibu: moved slightly
+02,27/02/2023,11/03/2023,Jimi_1,Jimi_2,w_minion64,w_minion,Jimi,Mix,m,,07/10/2010,148,clear,ambiguous,,,,,
+01,21/04/2023,03/05/2023,Danny_1,Danny_2,w_cuckoo64,w_cuckoo,Danny1,Vizsla,m,no,20/02/2021,26,ambiguous,clear,,,,,
+02,14/04/2023,09.06.2023/30.06.2023,Filou_1/Filou_3,Filou_2,w_minion64/w_fly64,w_fly64,Filou9,Mix,m,no,02/06/2021,22,clear,ambiguous,,,,,Filou_1: left chinrest in the end - need to be repeat; Filou_3: the tracker lost his eye during the testing
+01,29/09/2023,06/10/2023,Mexx_1,Mexx_2,w_fly64,w_fly64,Mexx2,Australian Shepherd,m,no,30/12/2011,140,ambiguous,clear,,,,,
+01,30/03/2023,27/04/2023,Henry7_1,Henry7_2,w_fly64,w_fly64,Henry7,Mix,m,yes,17/04/2020,35,ambiguous,clear,,,,,"Henry7_2: he left chin rest after 3rd video, I waited if he goes back into position, but he didn't, also not with ""rest"", so I went over and let him do rest again, left, and then he watched the rest of the experiment"
+02,14/02/2023,07/03/2023,Kelly_1,Kelly_2,w_fly64,w_fly64,Kelly2,Australian Shepherd,f,no,13/03/2022,11,clear,ambiguous,,,,,
+02,23/02/2023,08/03/2023,Zuzu_1,Zuzu_2,w_fly32,w_fly32,Zuzu,mix,f,yes,06/11/2020,27,clear,ambiguous,,,,,
+02,11/07/2023,19/07/2023,Henry9_1,Henry9_2,w_fly32,w_fly64,Henry9,mix,m,no,01/06/2022,13,clear,ambiguous,,,,,
+02,29/09/2023,04/10/2023,Kalea_1,Kalea_2,w_fly64,w_minion64,Kalea,Labrador Retriever,f,no,18/08/2020,3,,,,,,,
+01,18/12/2023,09/01/2024,Mathild1,Mathild2,w_minion64,w_minion64,Mathilda3,Mix,f,no,20/02/2022,,,,,,,,
+01,25/01/2024,01/02/2024,Nala_1,Nala_2,w_fly64,w_fly64,Nala13,Mix,f,no,01/05/2020,,,,,,,,
+02,02/02/2024,,Floki_1,,w_minion64,,Floki,Australian Shepherd,f,no,31/10/2021,,,,,,,,"Unfortunately the owner decided to give the dog away, so Floki is not avaiable anymore"
+01,05/03/2024,22/03/2024,Vilma_1,Vilma_2,w_fly64,w_fly64,Vilma,Magyar Vizsla,f,no,20/05/2022,,,,,,,,
+02,25/03/2024,08/04/2024,Ori_1,Ori_2,w_minion64,w_minion64,Ori,Nova Scotia Duck tolling retriever,f,no,03/03/2018,,,,,,,,
